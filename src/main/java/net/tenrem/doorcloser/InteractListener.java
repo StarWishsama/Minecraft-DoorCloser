@@ -2,6 +2,10 @@ package net.tenrem.doorcloser;
 
 import org.bukkit.block.data.*;
 import org.bukkit.event.player.PlayerInteractEvent;
+//import org.bukkit.material.MaterialData;
+//import org.bukkit.material.Openable;
+//import org.bukkit.Material;
+//import org.bukkit.block.data.type.*;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.Bisected.Half;
 import org.bukkit.block.data.type.Door;
@@ -15,6 +19,7 @@ import org.bukkit.event.block.Action;
 
 import javax.lang.model.util.ElementScanner6;
 
+//import javax.lang.model.util.ElementScanner6;
 
 import org.bukkit.*;
 import org.bukkit.Bukkit;
@@ -257,7 +262,7 @@ public final class InteractListener implements Listener
 						}
 						else
 						{
-							_plugin.getLogger().warning("Tried to close door block, but block data was null or not correct type.");
+							_plugin.getLogger().warning("已尝试关闭门方块, 但此方块数据是空的或者不是一个有效类型.");
 						}
 					}
 					else

@@ -2,51 +2,21 @@ package net.tenrem.doorcloser;
 
 import java.util.ArrayList;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.util.List;
 
 public class Settings 
 {
-	final static String configFileGeneratedByVersion_Key = "GeneratedByVersion";
+	public static int secondsToRemainOpen = 10;
+	public static boolean ignoreIfInCreative = false;
+	public static boolean ignoreIfSneaking = false;
+	public static boolean playSound = true;
 
-	final static String secondsToRemainOpen_Key = "Time";
-	final static String synchronizeDoubleDoorOpen_Key = "SynchronizeDoubleDoorOpen";
-	final static String synchronizeDoubleDoorClose_Key = "SynchronizeDoubleDoorClose1";	
-	final static String playSound_Key = "PlaySound";
+	public static boolean synchronizeDoubleDoorOpen = true;
+	public static boolean synchronizeDoubleDoorClose = true;
 
-	final static String ignoreIfInCreative_Key = "IgnoreIfInCreative";
-	final static String ignoreIfSneaking_Key = "IgnoreIfSneaking";
-
-	final static String trapDoorsInScope_Key = "TrapDoorBlocks";
-	final static String gatesInScope_Key = "GateBlocks";
-	final static String doorsInScope_Key = "DoorBlocks";
-
-
-	final static String configFileGeneratedByVersion_Default = "unknown (pre 1.0.12)";
-	final static int secondsToRemainOpen_Default = 5;
-
-	final static boolean synchronizeDoubleDoorOpen_Default = true;
-	final static boolean synchronizeDoubleDoorClose_Default = true;
-	final static boolean playSound_Default = true;
-
-	final static boolean ignoreIfInCreative_Default = true;
-	final static boolean ignoreIfSneaking_Default = false;
-
-
-	public static String configFileGeneratedByVersion = configFileGeneratedByVersion_Default;
-
-	public static int secondsToRemainOpen = secondsToRemainOpen_Default;
-	public static boolean synchronizeDoubleDoorOpen = synchronizeDoubleDoorOpen_Default;
-	public static boolean synchronizeDoubleDoorClose = synchronizeDoubleDoorClose_Default;
-	public static boolean playSound = playSound_Default;
-
-	public static boolean ignoreIfInCreative = ignoreIfInCreative_Default;
-	public static boolean ignoreIfSneaking = ignoreIfSneaking_Default;
-
-	public static List<Material> trapDoorsInScope = new ArrayList<Material>();
-	public static List<Material> gatesInScope = new ArrayList<Material>();
 	public static List<Material> doorsInScope = new ArrayList<Material>();
+	public static List<Material> gatesInScope = new ArrayList<Material>();
+	public static List<Material> trapDoorsInScope = new ArrayList<Material>();
 	
 	public static DoorCloserPlugin ThisPlugin;
 
@@ -59,7 +29,7 @@ public class Settings
 		
 			ReadConfigValues();
 			
-			ThisPlugin.getLogger().info("Settings reloaded from configuration file.");
+			ThisPlugin.getLogger().info("已经重载了配置文件.");
 		}
 	}
 	
@@ -71,35 +41,20 @@ public class Settings
 		// save the default config, if it's not already present
 		ThisPlugin.saveDefaultConfig();		
 		
-		FileConfiguration config = ThisPlugin.getConfig();
-
-		config.addDefault(configFileGeneratedByVersion_Key, configFileGeneratedByVersion_Default);
-		config.addDefault(secondsToRemainOpen_Key, secondsToRemainOpen_Default);
-		config.addDefault(synchronizeDoubleDoorOpen_Key, synchronizeDoubleDoorOpen_Default);
-		config.addDefault(synchronizeDoubleDoorClose_Key, synchronizeDoubleDoorClose_Default);
-		config.addDefault(playSound_Key, playSound_Default);
-		config.addDefault(ignoreIfInCreative_Key, ignoreIfInCreative_Default);
-		config.addDefault(ignoreIfSneaking_Key, ignoreIfSneaking_Default);
-
 		// read settings
+		
+		Settings.secondsToRemainOpen = ThisPlugin.getConfig().getInt("Time");
+		Settings.ignoreIfInCreative = ThisPlugin.getConfig().getBoolean("IgnoreIfInCreative");
+		Settings.ignoreIfSneaking = ThisPlugin.getConfig().getBoolean("IgnoreIfSneaking");
+		Settings.playSound = ThisPlugin.getConfig().getBoolean("PlaySound");
 
-		Settings.configFileGeneratedByVersion = ThisPlugin.getConfig().getString(configFileGeneratedByVersion_Key);
+		Settings.synchronizeDoubleDoorOpen = ThisPlugin.getConfig().getBoolean("SynchronizeDoubleDoorOpen");
+		Settings.synchronizeDoubleDoorClose = ThisPlugin.getConfig().getBoolean("SynchronizeDoubleDoorClose");
 
-		Settings.secondsToRemainOpen = ThisPlugin.getConfig().getInt(secondsToRemainOpen_Key);
-
-		Settings.synchronizeDoubleDoorOpen = ThisPlugin.getConfig().getBoolean(synchronizeDoubleDoorOpen_Key);
-		Settings.synchronizeDoubleDoorClose = ThisPlugin.getConfig().getBoolean(synchronizeDoubleDoorClose_Key);
-
-		Settings.playSound = ThisPlugin.getConfig().getBoolean(playSound_Key);
-
-		Settings.ignoreIfInCreative = ThisPlugin.getConfig().getBoolean(ignoreIfInCreative_Key);
-		Settings.ignoreIfSneaking = ThisPlugin.getConfig().getBoolean(ignoreIfSneaking_Key);
-
-		// the actual blocks to interact with		
-		List<String> trapDoorsInScopeStrings = (List<String>) ThisPlugin.getConfig().getStringList(trapDoorsInScope_Key);
-		List<String> gatesInScopeStrings = (List<String>) ThisPlugin.getConfig().getStringList(gatesInScope_Key);
-		List<String> doorsInScopeStrings = (List<String>) ThisPlugin.getConfig().getStringList(doorsInScope_Key);
-
+		
+		List<String> trapDoorsInScopeStrings = (List<String>) ThisPlugin.getConfig().getStringList("TrapDoorBlocks");
+		List<String> gatesInScopeStrings = (List<String>) ThisPlugin.getConfig().getStringList("GateBlocks");
+		List<String> doorsInScopeStrings = (List<String>) ThisPlugin.getConfig().getStringList("DoorBlocks");
 
 		trapDoorsInScope.clear();
 		gatesInScope.clear();
@@ -115,7 +70,7 @@ public class Settings
 			}
 			else
 			{
-				ThisPlugin.getLogger().warning("Unexpected value '" + val + "' in config trap door list.");
+				ThisPlugin.getLogger().warning("在配置中发现了错误的值 (活板门) '" + val + "'.");
 			}
 		}
 		
@@ -129,7 +84,7 @@ public class Settings
 			}
 			else
 			{
-				ThisPlugin.getLogger().warning("Unexpected value '" + val + "' in config gate list.");
+				ThisPlugin.getLogger().warning("在配置中发现了错误的值 (栅栏门) '" + val + "'.");
 			}
 		}
 		
@@ -143,33 +98,29 @@ public class Settings
 			}
 			else
 			{
-				ThisPlugin.getLogger().warning("Unexpected value '" + val + "' in config door list.");
+				ThisPlugin.getLogger().warning("在配置中发现了错误的值 (门) '" + val + "'.");
 			}
 	
 		}
 		
 		
 		// log the read settings out to the server log
+		ThisPlugin.getLogger().info("保持打开的秒数: " + Settings.secondsToRemainOpen);
+		ThisPlugin.getLogger().info("是否忽略创造模式玩家: " + Settings.ignoreIfInCreative);
+		ThisPlugin.getLogger().info("是否忽略潜行中的玩家: " + Settings.ignoreIfSneaking);
+		ThisPlugin.getLogger().info("播放音效: " + Settings.playSound);
 		
 		if (Settings.trapDoorsInScope.isEmpty() && Settings.gatesInScope.isEmpty() && Settings.doorsInScope.isEmpty())
 		{
-			ThisPlugin.getLogger().warning("No doors, gates, or trap doors configured to auto-close. Is the config file up to date?" );
-			ThisPlugin.getLogger().warning("The DoorCloser plugin will still run and consume resources.");
-			ThisPlugin.getLogger().warning("Update the configuration file and then use the /dcreload command to reload it.");
+			ThisPlugin.getLogger().warning("没有配置需要自动关闭的门, 栅栏门或者陷阱门, 你确定你的配置是正确的吗?");
 		}
 		else
 		{
-			ThisPlugin.getLogger().info("Count of trap doors in scope: " + Settings.trapDoorsInScope.size());
-			ThisPlugin.getLogger().info("Count of gate types in scope: " + Settings.gatesInScope.size());
-			ThisPlugin.getLogger().info("Count of door types in scope: " + Settings.doorsInScope.size());
+			ThisPlugin.getLogger().info("已配置的陷阱门个数: " + Settings.trapDoorsInScope.size());
+			ThisPlugin.getLogger().info("已配置的栅栏门个数: " + Settings.gatesInScope.size());
+			ThisPlugin.getLogger().info("已配置的门个数: " + Settings.doorsInScope.size());
 		}
-
-		ThisPlugin.getLogger().info("Seconds to remain open: " + Settings.secondsToRemainOpen);
-		ThisPlugin.getLogger().info("Ignore if in creative mode: " + Settings.ignoreIfInCreative);
-		ThisPlugin.getLogger().info("Ignore if sneaking: " + Settings.ignoreIfSneaking);
-		ThisPlugin.getLogger().info("Play sound: " + Settings.playSound);
-		ThisPlugin.getLogger().info("Config file generated by version: " + Settings.configFileGeneratedByVersion);
-
+				
 	}
 	
 	

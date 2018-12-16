@@ -22,7 +22,7 @@ public class CommandReload implements CommandExecutor
 		{
 			Player player = (Player)sender;
 			
-			player.sendMessage("DoorCloser settings reloaded from config.yml.");
+			player.sendMessage("DoorCloser 设置已重载.");
 		}
 		
 		

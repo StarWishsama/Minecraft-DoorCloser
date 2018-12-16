@@ -13,9 +13,11 @@ public class DoorCloserPlugin extends JavaPlugin
 	
 		// set up commands
 		RegisterCommands();
-		
+
 		// register event listener
 		RegisterEvents();
+
+		this.getLogger().info("请注意, 该版本的 DoorCloser 仅支持 v1.13.x!");
 	}
 
 	
